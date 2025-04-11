@@ -21,16 +21,12 @@ from binance_future_process import get_order_book
 from binance_future_process import get_future_balance_assets
 from binance_future_process import check_position
 
-from token_manager import TokenManager
 from token_manager_async import AsyncTokenManager
 
 
 
 import streamlit as st
-import subprocess
-import numpy as np
-import pandas as pd
-import requests,json,re
+import requests,json
 import dotenv
 
 
@@ -400,91 +396,5 @@ async def run_all():
 
 if __name__ == "__main__":
     asyncio.run(run_all())
-"""while True:
-    result = token_manager.post_data(
-        'http://127.0.0.1:5000/api/data/post_realtime', 
-         post_realtime(stream.klines_df)
-    )
-    
-    result = token_manager.post_data(
-        'http://127.0.0.1:5000/api/data/post_open_positions', 
-         post_openPosition()
-    )
-
-    result = token_manager.post_data(
-        'http://127.0.0.1:5000/api/data/post_assets', 
-         post_assets(client)
-    )
-    time.sleep(10)
-    
-   
-    
-result = token_manager.get_data(
-    'http://127.0.0.1:5000/api/data/get_realtime', 
-)
-result = token_manager.get_data(
-    'http://127.0.0.1:5000/api/data/get_openPositions', 
-)
-result['data'][0]['total_profit']
-result = token_manager.get_data(
-    'http://127.0.0.1:5000/api/data/get_assets', 
-)
-result = token_manager.get_data(
-    'http://127.0.0.1:5000/api/data/get_prompt', 
-)
-prompts=result['data']['prompt_text']
-parse_trade_prompts(result['data']['prompt_text'])
-token_manager.get_valid_token()
-token_manager.is_token_expired()
-
-def parse_trade_prompts(prompts):
-
-    parsed_results = []
-    
-    # Extract symbol
-    def symbol_return(prompts):
-        symbol_match = re.search(r'(btc|bitcoin)', prompts.lower(), re.IGNORECASE).group(1)
-        symbol=''
-        if (symbol_match=='btc') | (symbol_match=='bitcoin'):
-            symbol='BTCUSDT'
-        else:
-            symbol='Invalid'
-        return symbol
-    def side_return(prompts):
-        symbol_match = re.search(r'(buy|short|long|sell)', prompts.lower(), re.IGNORECASE).group(1)
-        symbol=''
-        if (symbol_match=='btc') | (symbol_match=='bitcoin'):
-            symbol='BTCUSDT'
-        else:
-            symbol='Invalid'
-        return symbol
-    # Extract price
-    price_match = re.search(r'(\d+(?:,\d{3})*(?:\.\d+)?)', prompts.replace(',', '').lower())
-    price = float(price_match.group(1)) if price_match else None
-    
-    # Extract leverage (improved regex to handle more cases)
-    leverage_match = re.search(r'(\d+)(?:\s*x|\s*kaldıraç|\s*leverage)', prompts.lower(), re.IGNORECASE)  
-    leverage = int(leverage_match.group(1)) if leverage_match else None
-    
-    position_size_match = re.search(r'(\d+)(?:\s*dolar|dollar|\$)', prompts.lower(), re.IGNORECASE)
-    position_size_match = float(position_size_match.group(1)) if position_size_match else None
-    # Determine trade side
-    side = 'long' if ('long' in prompts.lower() or 'buy' in prompts.lower()) else 'short' if ('short' in prompts.lower() or 'sell' in prompts.lower()) else None
-    
-    # Construct result
-    result = {
-        "symbol": symbol_return(prompts),
-        "side": side,
-        "price": price,
-        "leverage": leverage,
-        "position_size":position_size_match
-    }
-    
-    parsed_results.append(result)
-   
-    return parsed_results
-# Parse the generated prompts
-parsed_prompts = parse_trade_prompts(btc_prompts[15])
-"""
 
 
