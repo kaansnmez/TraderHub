@@ -228,7 +228,16 @@ def token_required(f):
         
         return f(current_user, *args, **kwargs)
     return decorated
-
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({
+        'message': 'API çalışıyor',
+        'endpoints': {
+            'login': '/login',
+            'register': '/register',
+            'data': '/api/data'
+        }
+    }), 200
 # Kayıt endpoint'i
 @app.route('/register', methods=['POST'])
 def register():
