@@ -326,7 +326,7 @@ async def periodic_task(token_manager, endpoint,interval,func):
         except Exception as e:
             print(f"{endpoint} - General error: {e}")
         
-        await asyncio.sleep(interval)  # Belirtilen süre kadar bekle
+        await asyncio.sleep(10)  # Belirtilen süre kadar bekle
 async def all_requests():
 
     realtime_task = asyncio.create_task(
