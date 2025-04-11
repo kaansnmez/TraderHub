@@ -9,7 +9,6 @@ google-generativeai
 streamlit
 python-dotenv
 requests
-jsonlib
 python-binance
 binance-futures-connector
 pandas==1.5.3
