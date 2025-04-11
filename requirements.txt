@@ -1,10 +1,6 @@
 haystack-ai
 google-ai-haystack
 trafilatura
-os
-time
-threading
-warnings
 jwt
 asyncio
 aiohttp
@@ -22,6 +18,5 @@ websocket
 urllib
 Flask
 Flask-SQLAlchemy
-datetime
 cryptography
 plotly
