@@ -27,7 +27,7 @@ from token_manager_async import AsyncTokenManager
 
 import streamlit as st
 import requests,json
-import dotenv
+import dotenv,subprocess
 
 
 dotenv.load_dotenv()
@@ -40,6 +40,8 @@ cm_futures_client=connect_future_binance(binance_future_process.api_key,binance_
 google_api=os.environ['gemini_key']
 token_manager = AsyncTokenManager("http://127.0.0.1:5000/login",os.environ['user_id'],os.environ['pw'])
 
+def flasks(*args):
+    subprocess.run(["python", r"flask_app.py"])
 
 def run_stream(*args):
     stream.run()
@@ -54,19 +56,20 @@ class ThreadManager:
         # Thread'ler için stop event'ları
         self.stop_events = {
             "websocket": threading.Event(),
-            #"flask_app": threading.Event()
+            "flask_app": threading.Event()
             # Gerekirse diğer thread'ler için de ekleyebilirsiniz
         }
         
         # Thread tanımlamaları
         self.thread_dict = {
             "websocket": None,
-            #"flask_app": None
+            "flask_app": None
         }
 
     def create_websocket_thread(self):
         # Her thread için ayrı bir stop event kullanın
         websocket_stop_event = self.stop_events["websocket"]
+        
         def run_websocket(websocket_stop_event):
             while not websocket_stop_event.is_set():
                 try:
@@ -78,6 +81,21 @@ class ThreadManager:
             
         thread = threading.Thread(target=run_websocket,args=(websocket_stop_event,), name="websocket")
         self.thread_dict['websocket']=thread
+        return thread
+    def create_flask_thread(self):
+        # Her thread için ayrı bir stop event kullanın
+        flask_stop_event = self.stop_events["flask_app"]
+        def run_flask(flask_stop_event):
+            while not flask_stop_event.is_set():
+                try:
+                    # flask app çalışma mantığı
+                    flasks(flask_stop_event)
+                except Exception as e:
+                    print(f"websocket thread hatası: {e}")
+                    break
+            
+        thread = threading.Thread(target=run_flask,args=(flask_stop_event,), name="flask_app")
+        self.thread_dict['flask_app']=thread
         return thread
 
     def check_threads(self, thread_list):
@@ -353,10 +371,10 @@ thread_manager = ThreadManager()
 def main(): 
     # İlk thread'leri oluştur
     websocket_thread = thread_manager.create_websocket_thread()
-    #flask_thread = thread_manager.create_flask_thread()
+    flask_thread = thread_manager.create_flask_thread()
 
     # Thread listesini oluştur
-    thread_list = [websocket_thread]
+    thread_list = [websocket_thread,flask_thread]
     
     # Thread'leri başlat
     for thread in thread_list:
