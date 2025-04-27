@@ -1,7 +1,7 @@
 haystack-ai
 google-ai-haystack
 trafilatura
-jwt
+pyjwt
 asyncio
 aiohttp
 python-signal
