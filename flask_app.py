@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify,json,make_response,session
-
+from flask import Flask, request, jsonify,json,make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.types import JSON
@@ -419,7 +418,7 @@ def post_prompt(current_user):
         record = Prompt.query.filter_by(uid=current_user.id).order_by(desc(Prompt.created_at)).first()
         record.answer=json.dumps(data['answer'])
         db.session.commit()
-    
+        return jsonify({"message": "Veri kaydedildi", "id": record.id}), 201
     # Periyodik temizlik
     #cleanup_old_data(Open_Position)
     

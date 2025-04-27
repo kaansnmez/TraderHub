@@ -9,10 +9,10 @@ google-generativeai
 streamlit
 python-dotenv
 requests
-gunicorn
 python-binance
 binance-futures-connector
 pandas==1.5.3
+gunicorn
 numpy==1.24.3
 websocket-client
 urllib3
@@ -20,3 +20,8 @@ Flask
 Flask-SQLAlchemy
 cryptography
 plotly
+snscrape
+praw
+nltk
+huggingface_hub
+sentence-transformers

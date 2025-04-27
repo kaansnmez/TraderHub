@@ -1,17 +1,17 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
 import os
 import warnings
-import requests,json
+import requests
 import time
 import dotenv
 from token_manager_async import AsyncTokenManager
-import asyncio,aiohttp
+import asyncio
 import jwt
 import binance_future_process
 from binance.exceptions import BinanceAPIException
+import traceback
 
 st.set_page_config(
     page_title="TradeHub",
@@ -505,7 +505,7 @@ def prompt():
         if trade_prompt:
             loop.run_until_complete(get_data("post_prompt",'post',data))
             with st.chat_message("user"):
-                st.write(f"{trade_prompt}")
+                st.text(f"{trade_prompt}")
             with st.chat_message("assistant"):
                 st.write("Processing request..")
             
@@ -521,18 +521,29 @@ def prompt():
                         
                         #loop.close()
                         if not data['data']['answer'] is None:
-                            if len(data['data']['answer'])<150:
+                            if "missing" not in data['data']['answer'] and all(k in data['data']['answer'] for k in ['symbol', 'side', 'price', 'leverage', 'position_size']):
                                 with st.chat_message("assistant"):
-                                    st.text(data['data']['answer'])
                                     st.text("Your request was successful. You can check at 'Positions & Orders'.")
+                                    pretty_text = data['data']['answer'].encode().decode('unicode_escape')
+
+                                    st.text(pretty_text)
+                                    break
                             else:
-                                  with st.chat_message("assistant"):
-                                      st.text(data['data']['answer'].split('\\n')[0])
-                                      st.text(data['data']['answer'].split('\\n')[1].replace('\\"',""))
-                                      st.text("Your request was unsuccessful. You can check your prompt.")  
-                            break    
-                    except:
-                        pass
+                                with st.chat_message("assistant"):
+                                    
+                                    st.text(data['data']['answer'].split('\\n')[0])
+                                    try:
+                                        st.text(data['data']['answer'].split('\\n')[1].replace('\\"',""))
+                                    except:
+                                        st.text("Your request was unsuccessful.")
+                                        break
+                                    break
+                                break
+                        
+                    except Exception as e:
+                        st.error(f"Hata oluştu: {traceback.format_exc()}")
+                        
+                        break
 def dashboard_page():
     st.session_state['page'] = 'dashboard'
     st.title(":bar_chart: TraderHub - Prompt Based Trading :currency_exchange:")
