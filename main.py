@@ -766,10 +766,10 @@ def main():
     # İlk thread'leri oluştur
     websocket_thread = thread_manager.create_websocket_thread()
     #flask_thread = thread_manager.create_flask_thread()
-    streamlit_thread = thread_manager.create_streamlit_thread()
+    #streamlit_thread = thread_manager.create_streamlit_thread()
 
     # Thread listesini oluştur
-    thread_list = [websocket_thread,streamlit_thread]
+    thread_list = [websocket_thread]
     
     # Thread'leri başlat
     for thread in thread_list:
