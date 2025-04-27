@@ -617,7 +617,7 @@ class AsyncTradingAgent:
         self.advanced_rag=self.rag()
         while True:
             try:
-                inputs = await self.token_manager.get_data(f'http://{host}/api/data/get_prompt')
+                inputs = await self.token_manager.get_data(f'{host}/api/data/get_prompt')
                 prompt_id = inputs['data']['id']
                 if prompt_id in self.processed_prompt_ids:
                     await asyncio.sleep(2)
@@ -658,17 +658,17 @@ class AsyncTradingAgent:
                             response_json='BinanceAPI Timeout error occurred. Retry attempt 3/3.Timeout waiting for response from backend server. Send status unknown; execution status unknown.'
                             data={'prompt_text':inputs,'answer':response_json}
                             print(data)
-                            await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
+                            await token_manager.post_data(f'{host}/api/data/post_prompt',data)
                         time.sleep(0.2)
                         print("response_order:",response_order)
                         response_json=str(response_json)+'\n'+str(response_json_sentiment)
                         data={'prompt_text':inputs,'answer':response_json}
-                        await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
+                        await token_manager.post_data(f'{host}/api/data/post_prompt',data)
                         
                     else:
                         data={'prompt_text':inputs,'answer':response_json}
                         #print("Yanlış Tanımlama blogu: ",data)
-                        await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
+                        await token_manager.post_data(f'{host}/api/data/post_prompt',data)
                 else:
                     await asyncio.sleep(2)
             except Exception as e:
@@ -698,7 +698,7 @@ async def periodic_task(token_manager, endpoint,interval,func):
         try:
             
             # Eğer data_func bir fonksiyon ise çağırıyoruz
-            if endpoint == f"http://{host}/api/data/post_realtime":
+            if endpoint == f"{host}/api/data/post_realtime":
                 data =func(stream)
             else:
                 data = func() if callable(func) else func
@@ -715,7 +715,7 @@ async def periodic_task(token_manager, endpoint,interval,func):
                     print(f"{endpoint} - Token refreshed, retrying request...")
                     
                     # Retry the request with new token
-                    if endpoint == f"http://{host}/api/data/post_realtime":
+                    if endpoint == f"{host}/api/data/post_realtime":
                         data = func(stream)
                     else:
                         data = func() if callable(func) else func
@@ -732,15 +732,15 @@ async def periodic_task(token_manager, endpoint,interval,func):
 async def all_requests():
 
     realtime_task = asyncio.create_task(
-        periodic_task(token_manager, f'http://{host}/api/data/post_realtime', 
+        periodic_task(token_manager, f'{host}/api/data/post_realtime', 
                               2,post_realtime))
     
     positions_task = asyncio.create_task(
-        periodic_task(token_manager, f'http://{host}/api/data/post_open_positions', 
+        periodic_task(token_manager, f'{host}/api/data/post_open_positions', 
                               5, post_openPosition))
     
     assets_task = asyncio.create_task(
-        periodic_task(token_manager, f'http://{host}/api/data/post_assets', 
+        periodic_task(token_manager, f'{host}/api/data/post_assets', 
                               10,post_assets))
     
     subreddits = ["CryptoCurrency", "Bitcoin", "CryptoMarkets","btc","BitcoinBeginners","CryptoMoonShots","cryptotechnology"]
