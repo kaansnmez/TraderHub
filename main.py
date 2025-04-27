@@ -58,7 +58,7 @@ client=connect_binance(binance_future_process.api_key, binance_future_process.ap
 cm_futures_client=connect_future_binance(binance_future_process.api_key,binance_future_process.api_secret)
 tw_bearer_token=os.environ['tw_bearer']
 host='https://traderhub-flask.onrender.com'
-token_manager = AsyncTokenManager(f"http://{host}/login",os.environ['user_id'],os.environ['pw'])
+token_manager = AsyncTokenManager(f"{host}/login",os.environ['user_id'],os.environ['pw'])
 
 document_store=InMemoryDocumentStore()
 existing_documents =document_store.filter_documents(filters={})# Index Pipeline
