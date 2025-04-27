@@ -57,8 +57,8 @@ interval='1d'
 client=connect_binance(binance_future_process.api_key, binance_future_process.api_secret)
 cm_futures_client=connect_future_binance(binance_future_process.api_key,binance_future_process.api_secret)
 tw_bearer_token=os.environ['tw_bearer']
-
-token_manager = AsyncTokenManager("http://127.0.0.1:5000/login",os.environ['user_id'],os.environ['pw'])
+host='https://traderhub-flask.onrender.com'
+token_manager = AsyncTokenManager(f"http://{host}/login",os.environ['user_id'],os.environ['pw'])
 
 document_store=InMemoryDocumentStore()
 existing_documents =document_store.filter_documents(filters={})# Index Pipeline
@@ -617,7 +617,7 @@ class AsyncTradingAgent:
         self.advanced_rag=self.rag()
         while True:
             try:
-                inputs = await self.token_manager.get_data('http://127.0.0.1:5000/api/data/get_prompt')
+                inputs = await self.token_manager.get_data(f'http://{host}/api/data/get_prompt')
                 prompt_id = inputs['data']['id']
                 if prompt_id in self.processed_prompt_ids:
                     await asyncio.sleep(2)
@@ -658,17 +658,17 @@ class AsyncTradingAgent:
                             response_json='BinanceAPI Timeout error occurred. Retry attempt 3/3.Timeout waiting for response from backend server. Send status unknown; execution status unknown.'
                             data={'prompt_text':inputs,'answer':response_json}
                             print(data)
-                            await token_manager.post_data('http://127.0.0.1:5000/api/data/post_prompt',data)
+                            await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
                         time.sleep(0.2)
                         print("response_order:",response_order)
                         response_json=str(response_json)+'\n'+str(response_json_sentiment)
                         data={'prompt_text':inputs,'answer':response_json}
-                        await token_manager.post_data('http://127.0.0.1:5000/api/data/post_prompt',data)
+                        await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
                         
                     else:
                         data={'prompt_text':inputs,'answer':response_json}
                         #print("Yanlış Tanımlama blogu: ",data)
-                        await token_manager.post_data('http://127.0.0.1:5000/api/data/post_prompt',data)
+                        await token_manager.post_data(f'http://{host}/api/data/post_prompt',data)
                 else:
                     await asyncio.sleep(2)
             except Exception as e:
@@ -698,7 +698,7 @@ async def periodic_task(token_manager, endpoint,interval,func):
         try:
             
             # Eğer data_func bir fonksiyon ise çağırıyoruz
-            if endpoint == "http://127.0.0.1:5000/api/data/post_realtime":
+            if endpoint == f"http://{host}/api/data/post_realtime":
                 data =func(stream)
             else:
                 data = func() if callable(func) else func
@@ -715,7 +715,7 @@ async def periodic_task(token_manager, endpoint,interval,func):
                     print(f"{endpoint} - Token refreshed, retrying request...")
                     
                     # Retry the request with new token
-                    if endpoint == "http://127.0.0.1:5000/api/data/post_realtime":
+                    if endpoint == f"http://{host}/api/data/post_realtime":
                         data = func(stream)
                     else:
                         data = func() if callable(func) else func
@@ -732,15 +732,15 @@ async def periodic_task(token_manager, endpoint,interval,func):
 async def all_requests():
 
     realtime_task = asyncio.create_task(
-        periodic_task(token_manager, 'http://127.0.0.1:5000/api/data/post_realtime', 
+        periodic_task(token_manager, f'http://{host}/api/data/post_realtime', 
                               2,post_realtime))
     
     positions_task = asyncio.create_task(
-        periodic_task(token_manager, 'http://127.0.0.1:5000/api/data/post_open_positions', 
+        periodic_task(token_manager, f'http://{host}/api/data/post_open_positions', 
                               5, post_openPosition))
     
     assets_task = asyncio.create_task(
-        periodic_task(token_manager, 'http://127.0.0.1:5000/api/data/post_assets', 
+        periodic_task(token_manager, f'http://{host}/api/data/post_assets', 
                               10,post_assets))
     
     subreddits = ["CryptoCurrency", "Bitcoin", "CryptoMarkets","btc","BitcoinBeginners","CryptoMoonShots","cryptotechnology"]
@@ -765,11 +765,11 @@ thread_manager = ThreadManager()
 def main(): 
     # İlk thread'leri oluştur
     websocket_thread = thread_manager.create_websocket_thread()
-    flask_thread = thread_manager.create_flask_thread()
+    #flask_thread = thread_manager.create_flask_thread()
     streamlit_thread = thread_manager.create_streamlit_thread()
 
     # Thread listesini oluştur
-    thread_list = [websocket_thread,flask_thread,streamlit_thread]
+    thread_list = [websocket_thread,streamlit_thread]
     
     # Thread'leri başlat
     for thread in thread_list:

@@ -22,11 +22,12 @@ st.set_page_config(
 )
 
 dotenv.load_dotenv()
-API_BASE_URL = 'http://127.0.0.1:5000'
+API_BASE_URL = 'https://traderhub-flask.onrender.com'
+host='https://traderhub-flask.onrender.com'
 client=binance_future_process.connect_binance(binance_future_process.api_key, binance_future_process.api_secret)
 
 
-token_manager = AsyncTokenManager("http://127.0.0.1:5000/login",os.environ['user_id'],os.environ['pw'])
+token_manager = AsyncTokenManager(f"http://{host}/login",os.environ['user_id'],os.environ['pw'])
 
 
 loop = asyncio.new_event_loop()   
@@ -162,15 +163,15 @@ async def get_data(order=False,req_type='post',data=""):
                          }}
     if order!=False:
         if req_type=='post':
-            await token_manager.post_data("http://127.0.0.1:5000/api/data/{}".format(order),data)
+            await token_manager.post_data(f"http://{host}/api/data/{order}",data)
         else:
-            data=await token_manager.get_data("http://127.0.0.1:5000/api/data/{}".format(order))
+            data=await token_manager.get_data(f"http://{host}/api/data/{order}")
         
         return data
     else:    
         for url in data_dict.keys():
             for key in data_dict[url].keys():
-                data=await token_manager.get_data("http://127.0.0.1:5000/api/data/{}".format(key))
+                data=await token_manager.get_data(f"http://{host}/api/data/{key}")
                 data_dict[url][key]=data
     return data_dict
 def json_to_df(json_dict):
