@@ -2,6 +2,8 @@
 
 TraderHub, finansal işlemleri prompt tabanlı yönetmek için geliştirilmiş bir platformdur. Kullanıcılar, sistem üzerinden **prompt tabanlı** alım-satım işlemleri gerçekleştirebilirler. Ayrıca, **Reddit verileri** üzerinden yapılan sentiment analizi ile piyasa duyarlılığını ölçer ve bu veriye dayalı işlem stratejileri geliştirilebilir. İşlemler BINANCE Testnet kısmında gerçekleştirilir. Canlı olarak takip edilebilir işlemler, kapatılabilir veya açılan işlemler iptal edilebilir.
 
+Note: Proje şuan **DEMO** aşamadadır. 
+
 ---
 
 ## Özellikler
