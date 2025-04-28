@@ -49,10 +49,10 @@ TraderHub üzerinden işlem yapma süreci şu şekilde işler:
    Kullanıcılar, işlem yapmak istedikleri piyasa çiftini ve stratejiyi belirten bir **prompt** girerler. Bu işlem anında işleme alınır.
 
 2. **Sentiment Analizi**:  
-   Kullanıcılar, işlem yapacakları kripto para biriminin **Reddit üzerindeki duyarlılık analizini** talep edebilir. Bu analiz, pozitif, negatif veya nötr yorum oranlarını gösterir.
+   Sistem, işlem yapacakları kripto para biriminin **Reddit üzerindeki sentiment analizini** işlem açma talebiyle birlikte gönderir. Bu analiz, pozitif, negatif veya nötr yorum oranlarını gösterir.
 
 3. **İşlem Sonucu**:  
-   İşlem açıldıktan sonra, kullanıcıya işlem detayları döndürülür. Bu işlem sonuçları **pozisyonlar ve siparişler** sekmesinde takip edilebilir.
+   İşlem açıldıktan sonra, kullanıcıya işlem detayları döndürülür. Bu işlem sonuçları **Active Trades ve Open Orders** sekmesinde takip edilebilir.
 
 ---
 
@@ -61,7 +61,6 @@ TraderHub üzerinden işlem yapma süreci şu şekilde işler:
 TraderHub projesinin yapısı aşağıdaki gibi düzenlenmiştir:
 TraderHub/
 │
-├── app.py                                  # Ana Flask uygulama dosyası
 ├── requirements.txt                        # Library listesi
 ├── binance_future_process.py               # Binance API tarafı işlem modülü
 ├── data/BTC/                               
