@@ -2,6 +2,8 @@
 
 In today's fast-paced crypto market, having data-driven insights can make the difference between profit and loss. In this blog post, I'll walk you through a project that combines natural language processing, sentiment analysis, and automated trading in one cohesive system.
 
+Note : This is **Demo** Project. Some processes not completely usefull .Like document store (InMemoryDocumentStore).
+
 ## Project Overview
 
 This project is a prompt-based crypto trading platform that leverages the power of Retrieval Augmented Generation (RAG) to analyze Reddit sentiment and execute trades on Binance. The system allows users to input natural language commands to open trading positions while providing sentiment analysis from Reddit discussions to inform their decisions.
