@@ -8,3 +8,7 @@ pyjwt
 python-binance
 numpy==1.24.3
 cryptography
+python-binance
+binance-futures-connector
+websocket-client
+urllib3
