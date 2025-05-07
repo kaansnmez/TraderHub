@@ -1,0 +1,8 @@
+streamlit
+pandas==1.5.3
+plotly
+requests
+python-dotenv
+asyncio
+pyjwt
+python-binance
